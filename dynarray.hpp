@@ -4,15 +4,26 @@
 #ifndef DYNARRAY_HPP
 #define DYNARRAY_HPP
 
-#include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal
+#include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal, std::lexicographical_compare_three_way
 #include <cstddef>           // std::size_t, std::ptrdiff_t
 #include <initializer_list>  // std::initializer_list
-#include <iterator>          // std::reverse_iterator, std::input_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits
+#include <iterator>          // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits
 #include <memory>            // std::addressof
 #include <numeric>           // std::iota
 #include <stdexcept>         // std::out_of_range
-#include <type_traits>       // std::is_invocable_r_v
 #include <utility>           // std::exchange
+
+#if __cplusplus >= 201703L
+#define DYNARRAY_NODISCARD [[nodiscard]]
+#else
+#define DYNARRAY_NODISCARD
+#endif
+
+#if __cplusplus >= 202002L
+#define DYNARRAY_CONSTEXPR constexpr
+#else
+#define DYNARRAY_CONSTEXPR
+#endif
 
 namespace util {
 
@@ -37,34 +48,35 @@ class dynarray {
   /*******************************************************************************************************************/
   /**                                                 construction                                                  **/
   /*******************************************************************************************************************/
-  constexpr dynarray() : size_{0}, data_{nullptr} {}
-  constexpr explicit dynarray(const size_type size) : size_{size}, data_{new value_type[size]} {}
-  constexpr dynarray(const size_type size, const value_type& init) : size_{size}, data_{new value_type[size]} {
+  DYNARRAY_CONSTEXPR dynarray() = default;
+  DYNARRAY_CONSTEXPR explicit dynarray(size_type size) : size_{size}, data_{new value_type[size]} {}
+  DYNARRAY_CONSTEXPR dynarray(size_type size, const value_type& init) : size_{size}, data_{new value_type[size]} {
     // initialize with same value
     std::fill(this->begin(), this->end(), init);
   }
-  template <std::input_iterator InputIt>
-  constexpr dynarray(InputIt first, InputIt last)
+  template <typename InputIt>
+  DYNARRAY_CONSTEXPR dynarray(InputIt first, InputIt last)
       : size_{static_cast<size_type>(std::distance(first, last))}, data_{new value_type[size_]} {
     // copy values from iterator range
     std::copy(first, last, this->begin());
   }
-  constexpr dynarray(std::initializer_list<value_type> ilist) : dynarray{ilist.begin(), ilist.end()} {}
-  constexpr dynarray(const dynarray& other) : size_{other.size_}, data_{new value_type[size_]} {
+  DYNARRAY_CONSTEXPR dynarray(std::initializer_list<value_type> ilist) : dynarray{ilist.begin(), ilist.end()} {}
+  DYNARRAY_CONSTEXPR dynarray(const dynarray& other) : size_{other.size_}, data_{new value_type[size_]} {
     // copy values from other
     std::copy(other.cbegin(), other.cend(), this->begin());
   }
-  constexpr dynarray(dynarray&& other) noexcept : size_{std::exchange(other.size_, 0)}, data_{std::exchange(other.data_, nullptr)} {}
+  DYNARRAY_CONSTEXPR dynarray(dynarray&& other) noexcept
+      : size_{std::exchange(other.size_, 0)}, data_{std::exchange(other.data_, nullptr)} {}
 
   /*******************************************************************************************************************/
   /**                                                  destruction                                                  **/
   /*******************************************************************************************************************/
-  constexpr ~dynarray() { delete[] data_; }
+  DYNARRAY_CONSTEXPR ~dynarray() { delete[] data_; }
 
   /*******************************************************************************************************************/
   /**                                                  assignment                                                   **/
   /*******************************************************************************************************************/
-  constexpr dynarray& operator=(const dynarray& other) {
+  DYNARRAY_CONSTEXPR dynarray& operator=(const dynarray& other) {
     // guard against self assignment
     if (this != std::addressof(other)) {
       // if sizes mismatch use copy-and-swap idiom,
@@ -79,7 +91,7 @@ class dynarray {
     }
     return *this;
   }
-  constexpr dynarray& operator=(dynarray&& other) noexcept {
+  DYNARRAY_CONSTEXPR dynarray& operator=(dynarray&& other) noexcept {
     // guard against self assignment
     if (this != std::addressof(other)) {
       // free resources
@@ -90,7 +102,7 @@ class dynarray {
     }
     return *this;
   }
-  constexpr dynarray& operator=(std::initializer_list<value_type> ilist) {
+  DYNARRAY_CONSTEXPR dynarray& operator=(std::initializer_list<value_type> ilist) {
     // if sizes mismatch use copy-and-swap idiom,
     // otherwise just directly assign new values
     if (ilist.size() != size_) {
@@ -106,89 +118,125 @@ class dynarray {
   /*******************************************************************************************************************/
   /**                                                 element access                                                **/
   /*******************************************************************************************************************/
-  [[nodiscard]] constexpr reference at(const size_type pos) {
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference at(const size_type pos) {
     if (pos >= size_) throw std::out_of_range{"Index out-of-range: pos >= this->size()"};
     return data_[pos];
   }
-  [[nodiscard]] constexpr const_reference at(const size_type pos) const {
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference at(const size_type pos) const {
     if (pos >= size_) throw std::out_of_range{"Index out-of-range: pos >= this->size()"};
     return data_[pos];
   }
-  [[nodiscard]] constexpr reference operator[](const size_type pos) { return data_[pos]; }
-  [[nodiscard]] constexpr const_reference operator[](const size_type pos) const { return data_[pos]; }
-  [[nodiscard]] constexpr reference front() { return data_[0]; }
-  [[nodiscard]] constexpr const_reference front() const { return data_[0]; }
-  [[nodiscard]] constexpr reference back() { return data_[size_ - 1]; }
-  [[nodiscard]] constexpr const_reference back() const { return data_[size_ - 1]; }
-  [[nodiscard]] constexpr pointer data() { return data_; }
-  [[nodiscard]] constexpr const_pointer data() const { return data_; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference operator[](const size_type pos) { return data_[pos]; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference operator[](const size_type pos) const { return data_[pos]; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference front() { return data_[0]; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference front() const { return data_[0]; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference back() { return data_[size_ - 1]; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference back() const { return data_[size_ - 1]; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR pointer data() { return data_; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_pointer data() const { return data_; }
 
   /*******************************************************************************************************************/
   /**                                                iterator support                                               **/
   /*******************************************************************************************************************/
-  [[nodiscard]] constexpr iterator begin() noexcept { return data_; }
-  [[nodiscard]] constexpr iterator end() noexcept { return data_ + size_; }
-  [[nodiscard]] constexpr const_iterator begin() const noexcept { return data_; }
-  [[nodiscard]] constexpr const_iterator end() const noexcept { return data_ + size_; }
-  [[nodiscard]] constexpr const_iterator cbegin() const noexcept { return data_; }
-  [[nodiscard]] constexpr const_iterator cend() const noexcept { return data_ + size_; }
-  [[nodiscard]] constexpr reverse_iterator rbegin() noexcept { return std::make_reverse_iterator(this->end()); }
-  [[nodiscard]] constexpr reverse_iterator rend() noexcept { return std::make_reverse_iterator(this->begin()); }
-  [[nodiscard]] constexpr const_reverse_iterator rbegin() const noexcept { return std::make_reverse_iterator(this->end()); }
-  [[nodiscard]] constexpr const_reverse_iterator rend() const noexcept { return std::make_reverse_iterator(this->begin()); }
-  [[nodiscard]] constexpr const_reverse_iterator crbegin() const noexcept { return std::make_reverse_iterator(this->end()); }
-  [[nodiscard]] constexpr const_reverse_iterator crend() const noexcept { return std::make_reverse_iterator(this->begin()); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR iterator begin() noexcept { return data_; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR iterator end() noexcept { return data_ + size_; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_iterator begin() const noexcept { return data_; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_iterator end() const noexcept { return data_ + size_; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_iterator cbegin() const noexcept { return data_; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_iterator cend() const noexcept { return data_ + size_; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reverse_iterator rbegin() noexcept { return std::make_reverse_iterator(this->end()); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reverse_iterator rend() noexcept { return std::make_reverse_iterator(this->begin()); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator rbegin() const noexcept { return std::make_reverse_iterator(this->end()); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator rend() const noexcept { return std::make_reverse_iterator(this->begin()); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator crbegin() const noexcept { return std::make_reverse_iterator(this->end()); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator crend() const noexcept { return std::make_reverse_iterator(this->begin()); }
 
   /*******************************************************************************************************************/
   /**                                                   capacity                                                    **/
   /*******************************************************************************************************************/
-  [[nodiscard]] constexpr bool empty() const noexcept { return size_ == 0; }
-  [[nodiscard]] constexpr size_type size() const noexcept { return size_; }
-  [[nodiscard]] constexpr size_type max_size() const noexcept { return std::numeric_limits<difference_type>::max(); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR bool empty() const noexcept { return size_ == 0; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR size_type size() const noexcept { return size_; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR size_type max_size() const noexcept { return std::numeric_limits<difference_type>::max(); }
 
   /*******************************************************************************************************************/
   /**                                                   operations                                                  **/
   /*******************************************************************************************************************/
-  constexpr void swap(dynarray& other) noexcept {
+  DYNARRAY_CONSTEXPR void swap(dynarray& other) noexcept {
     std::swap(size_, other.size_);
     std::swap(data_, other.data_);
   }
-  constexpr void fill(const value_type& value = value_type{}) { std::fill(this->begin(), this->end(), value); }
-  constexpr void iota(const value_type& value = value_type{}) { std::iota(this->begin(), this->end(), value); }
+  DYNARRAY_CONSTEXPR void fill(const value_type& value = value_type{}) { std::fill(this->begin(), this->end(), value); }
+  DYNARRAY_CONSTEXPR void iota(const value_type& value = value_type{}) { std::iota(this->begin(), this->end(), value); }
   template <typename Generator>
-  requires std::is_invocable_r_v<value_type, Generator>
-  constexpr void generate(Generator gen) { std::generate(this->begin(), this->end(), gen); }
+  DYNARRAY_CONSTEXPR void generate(Generator gen) {
+    std::generate(this->begin(), this->end(), gen);
+  }
 
   /*******************************************************************************************************************/
   /**                                              non-member functions                                             **/
   /*******************************************************************************************************************/
-  constexpr friend void swap(dynarray& lhs, dynarray& rhs) noexcept { lhs.swap(rhs); }
-  [[nodiscard]] constexpr friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
-    return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+  DYNARRAY_CONSTEXPR friend void swap(dynarray& lhs, dynarray& rhs) noexcept { lhs.swap(rhs); }
+#if __cplusplus >= 202002L
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
+    return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
-  [[nodiscard]] constexpr friend auto operator<=>(const dynarray& lhs, const dynarray& rhs) noexcept {
-    // dynarrays are only equal if their sizes are equal
-    const auto size_cmp = lhs.size_ <=> rhs.size_;
-    if (size_cmp != 0) return size_cmp;
-    for (size_type i = 0; i < lhs.size_; ++i) {
-      // check for elements-wise equality
-      if (auto cmp = lhs.data_[i] <=> rhs.data_[i]; cmp != 0) return cmp;
-    }
-    // dynarrays are equal (as was size_cmp previously)
-    return size_cmp;
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
+    return lhs.size() != rhs.size() ? lhs.size() <=> rhs.size()
+                                    : std::lexicographical_compare_three_way(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
+#else
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
+    return lhs.compare(rhs) == 0;
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator!=(const dynarray& lhs, const dynarray& rhs) noexcept {
+    return lhs.compare(rhs) != 0;
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator<(const dynarray& lhs, const dynarray& rhs) noexcept {
+    return lhs.compare(rhs) < 0;
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator>(const dynarray& lhs, const dynarray& rhs) noexcept {
+    return lhs.compare(rhs) > 0;
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator<=(const dynarray& lhs, const dynarray& rhs) noexcept {
+    return lhs.compare(rhs) <= 0;
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator>=(const dynarray& lhs, const dynarray& rhs) noexcept {
+    return lhs.compare(rhs) >= 0;
+  }
+#endif
 
  private:
-  size_type size_;
-  pointer data_;
+#if __cplusplus < 202002L
+  int compare(const dynarray& other) const noexcept {
+    if (size_ != other.size_) {
+      return size_ > other.size_ ? 1 : -1;
+    }
+    for (size_type i = 0; i < size_; ++i) {
+      if (data_[i] > other.data_[i]) {
+        return 1;
+      } else if (data_[i] < other.data_[i]) {
+        return -1;
+      }
+    }
+    return 0;
+  }
+#endif
+
+  size_type size_{0};
+  pointer data_{nullptr};
 };
 
 /*******************************************************************************************************************/
 /**                                               deduction guides                                                **/
 /*******************************************************************************************************************/
-template <std::input_iterator InputIt>
+#if __cplusplus >= 201703L
+template <typename InputIt>
 dynarray(InputIt, InputIt) -> dynarray<typename std::iterator_traits<InputIt>::value_type>;
+#endif
 
 }  // namespace util
+
+#undef DYNARRAY_NODISCARD
+#undef DYNARRAY_CONSTEXPR
 
 #endif  // DYNARRAY_HPP
