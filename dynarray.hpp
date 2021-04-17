@@ -4,7 +4,8 @@
 #ifndef DYNARRAY_HPP
 #define DYNARRAY_HPP
 
-#include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal, std::lexicographical_compare_three_way
+#include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal, std::
+#include <cassert>           // assert
 #include <cstddef>           // std::size_t, std::ptrdiff_t
 #include <initializer_list>  // std::initializer_list
 #include <iterator>          // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits
@@ -126,12 +127,30 @@ class dynarray {
     if (pos >= size_) throw std::out_of_range{"Index out-of-range: pos >= this->size()"};
     return data_[pos];
   }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference operator[](const size_type pos) { return data_[pos]; }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference operator[](const size_type pos) const { return data_[pos]; }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference front() { return data_[0]; }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference front() const { return data_[0]; }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference back() { return data_[size_ - 1]; }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference back() const { return data_[size_ - 1]; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference operator[](const size_type pos) {
+    assert((pos < this->size()) && "Undefined behavior if pos >= size()!");
+    return data_[pos];
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference operator[](const size_type pos) const {
+    assert((pos < this->size()) && "Undefined behavior if pos >= size()!");
+    return data_[pos];
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference front() {
+    assert((!this->empty()) && "Calling front() is undefined for empty dynarrays!");
+    return data_[0];
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference front() const {
+    assert((!this->empty()) && "Calling front() is undefined for empty dynarrays!");
+    return data_[0];
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference back() {
+    assert((!this->empty()) && "Calling back() is undefined for empty dynarrays!");
+    return data_[size_ - 1];
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference back() const {
+    assert((!this->empty()) && "Calling back() is undefined for empty dynarrays!");
+    return data_[size_ - 1];
+  }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR pointer data() { return data_; }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_pointer data() const { return data_; }
 
@@ -165,10 +184,17 @@ class dynarray {
     std::swap(size_, other.size_);
     std::swap(data_, other.data_);
   }
-  DYNARRAY_CONSTEXPR void fill(const value_type& value = value_type{}) { std::fill(this->begin(), this->end(), value); }
-  DYNARRAY_CONSTEXPR void iota(const value_type& value = value_type{}) { std::iota(this->begin(), this->end(), value); }
+  DYNARRAY_CONSTEXPR void fill(const value_type& value = value_type{}) {
+    assert((data_ != nullptr) && "Calling fill() is undefined for nullptr data!");
+    std::fill(this->begin(), this->end(), value);
+  }
+  DYNARRAY_CONSTEXPR void iota(const value_type& value = value_type{}) {
+    assert((data_ != nullptr) && "Calling iota() is undefined for nullptr data!");
+    std::iota(this->begin(), this->end(), value);
+  }
   template <typename Generator>
   DYNARRAY_CONSTEXPR void generate(Generator gen) {
+    assert((data_ != nullptr) && "Calling generate() is undefined for nullptr data!");
     std::generate(this->begin(), this->end(), gen);
   }
 
