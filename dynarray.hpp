@@ -9,6 +9,7 @@
 #include <cstddef>           // std::size_t, std::ptrdiff_t
 #include <initializer_list>  // std::initializer_list
 #include <iterator>          // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits
+#include <limits>            // std::numeric_limits
 #include <memory>            // std::addressof
 #include <numeric>           // std::iota
 #include <stdexcept>         // std::out_of_range
