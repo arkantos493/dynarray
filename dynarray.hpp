@@ -4,7 +4,7 @@
 #ifndef DYNARRAY_HPP
 #define DYNARRAY_HPP
 
-#include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal, std::
+#include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal, std::lexicographical_compare_three_way
 #include <cassert>           // assert
 #include <cstddef>           // std::size_t, std::ptrdiff_t
 #include <initializer_list>  // std::initializer_list
@@ -15,6 +15,9 @@
 #include <stdexcept>         // std::out_of_range
 #include <type_traits>       // std::enable_if_t
 #include <utility>           // std::exchange
+#if __cplusplus >= 202002L
+#include <compare>  // std::strong_ordering
+#endif
 
 #if __cplusplus >= 201703L
 #define DYNARRAY_NODISCARD [[nodiscard]]
@@ -210,7 +213,7 @@ class dynarray {
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
     return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend std::string_ordering operator<=>(const dynarray& lhs, const dynarray& rhs) noexcept {
     return lhs.size() != rhs.size() ? lhs.size() <=> rhs.size()
                                     : std::lexicographical_compare_three_way(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
