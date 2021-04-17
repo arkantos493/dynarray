@@ -12,6 +12,7 @@
 #include <memory>            // std::addressof
 #include <numeric>           // std::iota
 #include <stdexcept>         // std::out_of_range
+#include <type_traits>       // std::enable_if_t
 #include <utility>           // std::exchange
 
 #if __cplusplus >= 201703L
@@ -55,7 +56,9 @@ class dynarray {
     // initialize with same value
     std::fill(this->begin(), this->end(), init);
   }
-  template <typename InputIt>
+  template <typename InputIt,
+            std::enable_if_t<std::is_convertible_v<typename std::iterator_traits<InputIt>::iterator_category, std::input_iterator_tag>,
+                             bool> = true>
   DYNARRAY_CONSTEXPR dynarray(InputIt first, InputIt last)
       : size_{static_cast<size_type>(std::distance(first, last))}, data_{new value_type[size_]} {
     // copy values from iterator range
