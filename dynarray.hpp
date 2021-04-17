@@ -8,13 +8,13 @@
 #include <cassert>           // assert
 #include <cstddef>           // std::size_t, std::ptrdiff_t
 #include <initializer_list>  // std::initializer_list
-#include <iterator>          // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits
-#include <limits>            // std::numeric_limits
-#include <memory>            // std::addressof
-#include <numeric>           // std::iota
-#include <stdexcept>         // std::out_of_range
-#include <type_traits>       // std::enable_if_t
-#include <utility>           // std::exchange
+#include <iterator>     // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits, std::input_iterator_tag
+#include <limits>       // std::numeric_limits
+#include <memory>       // std::addressof
+#include <numeric>      // std::iota
+#include <stdexcept>    // std::out_of_range
+#include <type_traits>  // std::enable_if_t, is_convertible_v
+#include <utility>      // std::exchange
 #if __cplusplus >= 202002L
 #include <compare>  // std::strong_ordering
 #endif
