@@ -1,8 +1,8 @@
 // (c) 2021 Marcel Breyer
 // This code is licensed under MIT license (see LICENSE.md for details)
 
-#ifndef DYNARRAY_HPP
-#define DYNARRAY_HPP
+#ifndef UTIL_DYNARRAY_HPP
+#define UTIL_DYNARRAY_HPP
 
 #include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal, std::lexicographical_compare_three_way
 #include <cassert>           // assert
@@ -272,4 +272,4 @@ dynarray(InputIt, InputIt) -> dynarray<typename std::iterator_traits<InputIt>::v
 #undef DYNARRAY_NODISCARD
 #undef DYNARRAY_CONSTEXPR
 
-#endif  // DYNARRAY_HPP
+#endif  // UTIL_DYNARRAY_HPP
