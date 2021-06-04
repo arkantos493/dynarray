@@ -8,7 +8,7 @@
 #include <cassert>           // assert
 #include <cstddef>           // std::size_t, std::ptrdiff_t
 #include <initializer_list>  // std::initializer_list
-#include <iterator>     // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits, std::input_iterator_tag
+#include <iterator>     // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits, std::forward_iterator_tag
 #include <limits>       // std::numeric_limits
 #include <memory>       // std::addressof
 #include <numeric>      // std::iota
@@ -60,10 +60,10 @@ class dynarray {
     // initialize with same value
     std::fill(this->begin(), this->end(), init);
   }
-  template <typename InputIt,
-            std::enable_if_t<std::is_convertible_v<typename std::iterator_traits<InputIt>::iterator_category, std::input_iterator_tag>,
+  template <typename ForwardIt,
+            std::enable_if_t<std::is_convertible_v<typename std::iterator_traits<ForwardIt>::iterator_category, std::forward_iterator_tag>,
                              bool> = true>
-  DYNARRAY_CONSTEXPR dynarray(InputIt first, InputIt last)
+  DYNARRAY_CONSTEXPR dynarray(ForwardIt first, ForwardIt last)
       : size_{static_cast<size_type>(std::distance(first, last))}, data_{new value_type[size_]} {
     // copy values from iterator range
     std::copy(first, last, this->begin());
@@ -263,8 +263,8 @@ class dynarray {
 /**                                               deduction guides                                                **/
 /*******************************************************************************************************************/
 #if __cplusplus >= 201703L
-template <typename InputIt>
-dynarray(InputIt, InputIt) -> dynarray<typename std::iterator_traits<InputIt>::value_type>;
+template <typename ForwardIt>
+dynarray(ForwardIt, ForwardIt) -> dynarray<typename std::iterator_traits<ForwardIt>::value_type>;
 #endif
 
 }  // namespace util
