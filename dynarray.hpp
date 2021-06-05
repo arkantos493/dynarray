@@ -1,5 +1,9 @@
-// (c) 2021 Marcel Breyer
-// This code is licensed under MIT license (see LICENSE.md for details)
+/**
+ * Copyright (C) 2021-06-05 - Marcel Breyer - All Rights Reserved
+ * Licensed under the MIT License. See LICENSE.md file in the project root for full license information.
+ *
+ * Implements a runtime fixed-size array.
+ */
 
 #ifndef UTIL_DYNARRAY_HPP
 #define UTIL_DYNARRAY_HPP
