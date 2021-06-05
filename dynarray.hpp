@@ -271,7 +271,7 @@ template <typename ForwardIt>
 dynarray(ForwardIt, ForwardIt) -> dynarray<typename std::iterator_traits<ForwardIt>::value_type>;
 #endif
 
-}  // namespace util
+}  // namespace cpp_util
 
 #undef DYNARRAY_NODISCARD
 #undef DYNARRAY_CONSTEXPR
