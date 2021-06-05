@@ -5,8 +5,8 @@
  * Implements a runtime fixed-size array.
  */
 
-#ifndef UTIL_DYNARRAY_HPP
-#define UTIL_DYNARRAY_HPP
+#ifndef CPP_UTIL_DYNARRAY_HPP
+#define CPP_UTIL_DYNARRAY_HPP
 
 #include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal, std::lexicographical_compare_three_way
 #include <cassert>           // assert
@@ -35,7 +35,7 @@
 #define DYNARRAY_CONSTEXPR
 #endif
 
-namespace util {
+namespace cpp_util {
 
 template <typename T>
 class dynarray {
@@ -276,4 +276,4 @@ dynarray(ForwardIt, ForwardIt) -> dynarray<typename std::iterator_traits<Forward
 #undef DYNARRAY_NODISCARD
 #undef DYNARRAY_CONSTEXPR
 
-#endif  // UTIL_DYNARRAY_HPP
+#endif  // CPP_UTIL_DYNARRAY_HPP
