@@ -10,6 +10,7 @@ set(TEST_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/assignment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/element_access.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/iterators.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/capacity.cpp
 )
 add_executable(test_cases ${CATCH_INCLUDE_DIR}/catch_main.cpp ${TEST_SOURCES})
 #target_compile_features(test_cases PUBLIC cxx_std_20)
