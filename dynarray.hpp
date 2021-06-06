@@ -8,7 +8,7 @@
 #ifndef CPP_UTIL_DYNARRAY_HPP
 #define CPP_UTIL_DYNARRAY_HPP
 
-#include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal, std::lexicographical_compare_three_way
+#include <algorithm>  // std::fill, std::copy, std::swap, std::generate, std::equal, std::lexicographical_compare_three_way, std::lexicographical_compare
 #include <cassert>           // assert
 #include <cstddef>           // std::size_t, std::ptrdiff_t
 #include <initializer_list>  // std::initializer_list
@@ -226,42 +226,18 @@ class dynarray {
   }
 #else
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
-    return lhs.compare(rhs) == 0;
+    return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
   }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator!=(const dynarray& lhs, const dynarray& rhs) noexcept {
-    return lhs.compare(rhs) != 0;
-  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator!=(const dynarray& lhs, const dynarray& rhs) noexcept { return !(lhs == rhs); }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator<(const dynarray& lhs, const dynarray& rhs) noexcept {
-    return lhs.compare(rhs) < 0;
+    return std::lexicographical_compare(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
   }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator>(const dynarray& lhs, const dynarray& rhs) noexcept {
-    return lhs.compare(rhs) > 0;
-  }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator<=(const dynarray& lhs, const dynarray& rhs) noexcept {
-    return lhs.compare(rhs) <= 0;
-  }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator>=(const dynarray& lhs, const dynarray& rhs) noexcept {
-    return lhs.compare(rhs) >= 0;
-  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator>(const dynarray& lhs, const dynarray& rhs) noexcept { return rhs < lhs; }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator<=(const dynarray& lhs, const dynarray& rhs) noexcept { return !(rhs < lhs); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator>=(const dynarray& lhs, const dynarray& rhs) noexcept { return !(lhs < rhs); }
 #endif
 
  private:
-#if __cplusplus < 202002L
-  int compare(const dynarray& other) const noexcept {
-    if (size_ != other.size_) {
-      return size_ > other.size_ ? 1 : -1;
-    }
-    for (size_type i = 0; i < size_; ++i) {
-      if (data_[i] > other.data_[i]) {
-        return 1;
-      } else if (data_[i] < other.data_[i]) {
-        return -1;
-      }
-    }
-    return 0;
-  }
-#endif
-
   size_type size_{0};
   pointer data_{nullptr};
 };
