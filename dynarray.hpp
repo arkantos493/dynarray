@@ -17,7 +17,7 @@
 #include <memory>       // std::addressof
 #include <numeric>      // std::iota
 #include <stdexcept>    // std::out_of_range
-#include <type_traits>  // std::enable_if_t, is_convertible
+#include <type_traits>  // std::remove_cv, std::enable_if, std::is_convertible
 #include <utility>      // std::exchange
 #if __cplusplus >= 202002L
 #include <compare>  // std::strong_ordering
@@ -55,6 +55,9 @@ class dynarray {
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
+  static_assert(std::is_same<typename std::remove_cv<value_type>::type, value_type>::value,
+                "cpp_util::dynarray must have a non-const, non-volatile value_type");
+
   /*******************************************************************************************************************/
   /**                                                 construction                                                  **/
   /*******************************************************************************************************************/
@@ -64,10 +67,9 @@ class dynarray {
     // initialize with same value
     std::fill(this->begin(), this->end(), init);
   }
-  template <
-      typename ForwardIt,
-      std::enable_if_t<std::is_convertible<typename std::iterator_traits<ForwardIt>::iterator_category, std::forward_iterator_tag>::value,
-                       bool> = true>
+  template <typename ForwardIt, typename std::enable_if<std::is_convertible<typename std::iterator_traits<ForwardIt>::iterator_category,
+                                                                            std::forward_iterator_tag>::value,
+                                                        bool>::type = true>
   DYNARRAY_CONSTEXPR dynarray(ForwardIt first, ForwardIt last)
       : size_{static_cast<size_type>(std::distance(first, last))}, data_{new value_type[size_]} {
     // copy values from iterator range
