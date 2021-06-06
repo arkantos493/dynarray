@@ -8,6 +8,7 @@ set(TEST_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/types.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/construction.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/assignment.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/element_access.cpp
 )
 add_executable(test_cases ${CATCH_INCLUDE_DIR}/catch_main.cpp ${TEST_SOURCES})
 #target_compile_features(test_cases PUBLIC cxx_std_20)
