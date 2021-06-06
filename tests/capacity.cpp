@@ -5,10 +5,10 @@
  * Implements tests for the capacity member functions of the cpp_util::dynarray class.
  */
 
+#include <limits>
+
 #include "catch/catch.hpp"
 #include "dynarray.hpp"
-
-#include <limits>
 
 TEST_CASE("dynarray capacity member functions", "[capacity]") {
   cpp_util::dynarray<int> default_arr;
@@ -24,7 +24,5 @@ TEST_CASE("dynarray capacity member functions", "[capacity]") {
     CHECK(arr.size() == 6);
   }
 
-  SECTION("max_size() member function") {
-    CHECK(cpp_util::dynarray<int>::max_size() == std::numeric_limits<std::ptrdiff_t>::max());
-  }
+  SECTION("max_size() member function") { CHECK(cpp_util::dynarray<int>::max_size() == std::numeric_limits<std::ptrdiff_t>::max()); }
 }
