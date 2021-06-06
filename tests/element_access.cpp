@@ -5,13 +5,12 @@
  * Implements tests for the element access member functions of the cpp_util::dynarray class.
  */
 
-#include "dynarray.hpp"
 #include "catch/catch.hpp"
-
+#include "dynarray.hpp"
 
 TEST_CASE("dynarray element access member functions", "[element_access]") {
-  cpp_util::dynarray<int> arr = { 0, 1, 2, 3, 4, 5 };
-  const cpp_util::dynarray<int> const_arr = { 0, 1, 2, 3, 4, 5 };
+  cpp_util::dynarray<int> arr = {0, 1, 2, 3, 4, 5};
+  const cpp_util::dynarray<int> const_arr = {0, 1, 2, 3, 4, 5};
   cpp_util::dynarray<int> default_arr;
 
   REQUIRE(arr.size() == 6);
@@ -49,5 +48,4 @@ TEST_CASE("dynarray element access member functions", "[element_access]") {
     CHECK(arr.data() == &arr[0]);
     CHECK(const_arr.data() == &const_arr[0]);
   }
-
 }

@@ -12,7 +12,7 @@
 #include "dynarray.hpp"
 
 TEST_CASE("dynarray assignment operators", "[assignment]") {
-  cpp_util::dynarray<int> arr1 = { 42, 42, 42 };
+  cpp_util::dynarray<int> arr1 = {42, 42, 42};
   cpp_util::dynarray<int> arr2;
 
   REQUIRE(arr1.size() == 3);
@@ -36,7 +36,7 @@ TEST_CASE("dynarray assignment operators", "[assignment]") {
   }
 
   SECTION("initializer_list-assignment operator") {
-    arr2 = { 42, 42, 42 };
+    arr2 = {42, 42, 42};
 
     REQUIRE(arr2.size() == 3);
     CHECK(std::all_of(arr2.data(), arr2.data() + 3, [](const int i) { return i == 42; }));
