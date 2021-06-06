@@ -20,10 +20,10 @@ int main() {
     cpp_util::dynarray<int> arr1;
     cpp_util::dynarray<int> arr2(10);
     cpp_util::dynarray<int> arr3(10, 4);
-    cpp_util::dynarray arr4 = {1, 2, 3, 4, 5};
+    cpp_util::dynarray<int> arr4 = {1, 2, 3, 4, 5};
 
     std::vector<float> vec = {1, 2, 3, 4, 5};
-    cpp_util::dynarray arr5(vec.begin(), vec.end());
+    cpp_util::dynarray<float> arr5(vec.begin(), vec.end());
 
     cpp_util::dynarray<int> arr6 = arr3;
     cpp_util::dynarray<int> arr7 = std::move(arr3);
