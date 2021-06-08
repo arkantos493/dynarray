@@ -63,7 +63,7 @@ class dynarray {
   /*******************************************************************************************************************/
   DYNARRAY_CONSTEXPR dynarray() noexcept = default;
   DYNARRAY_CONSTEXPR explicit dynarray(size_type size) : size_{size}, data_{new value_type[size]} {}
-  DYNARRAY_CONSTEXPR dynarray(size_type size, const value_type& init) : size_{size}, data_{new value_type[size]} {
+  DYNARRAY_CONSTEXPR dynarray(size_type size, const value_type& init) : dynarray(size) {
     // initialize with same value
     std::fill(this->begin(), this->end(), init);
   }
