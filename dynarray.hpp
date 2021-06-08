@@ -109,11 +109,8 @@ class dynarray {
   DYNARRAY_CONSTEXPR dynarray& operator=(dynarray&& other) noexcept {
     // guard against self assignment
     if (this != std::addressof(other)) {
-      // free resources
-      delete[] data_;
-      // perform move and set other to moved-from state
-      size_ = std::exchange(other.size_, 0);
-      data_ = std::exchange(other.data_, nullptr);
+      dynarray tmp{std::move(other)};
+      this->swap(tmp);
     }
     return *this;
   }
