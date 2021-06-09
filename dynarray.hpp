@@ -70,13 +70,12 @@ class dynarray {
   template <typename ForwardIt, typename std::enable_if<std::is_convertible<typename std::iterator_traits<ForwardIt>::iterator_category,
                                                                             std::forward_iterator_tag>::value,
                                                         bool>::type = true>
-  DYNARRAY_CONSTEXPR dynarray(ForwardIt first, ForwardIt last)
-      : size_{static_cast<size_type>(std::distance(first, last))}, data_{new value_type[size_]} {
+  DYNARRAY_CONSTEXPR dynarray(ForwardIt first, ForwardIt last) : dynarray(static_cast<size_type>(std::distance(first, last))) {
     // copy values from iterator range
     std::copy(first, last, this->begin());
   }
   DYNARRAY_CONSTEXPR dynarray(std::initializer_list<value_type> ilist) : dynarray{ilist.begin(), ilist.end()} {}
-  DYNARRAY_CONSTEXPR dynarray(const dynarray& other) : size_{other.size_}, data_{new value_type[size_]} {
+  DYNARRAY_CONSTEXPR dynarray(const dynarray& other) : dynarray(other.size_) {
     // copy values from other
     std::copy(other.cbegin(), other.cend(), this->begin());
   }
