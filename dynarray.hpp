@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021-06-05 - Marcel Breyer - All Rights Reserved
+ * Copyright (C) 2021-06-09 - Marcel Breyer - All Rights Reserved
  * Licensed under the MIT License. See LICENSE.md file in the project root for full license information.
  *
  * Implements a runtime fixed-size array.
@@ -40,9 +40,9 @@ namespace cpp_util {
 template <typename T>
 class dynarray {
  public:
-  /*******************************************************************************************************************/
-  /**                                                     types                                                     **/
-  /*******************************************************************************************************************/
+  /**************************************************************************************************************************************/
+  /**                                                              types                                                               **/
+  /**************************************************************************************************************************************/
   using value_type = T;
   using size_type = std::size_t;
   using difference_type = std::ptrdiff_t;
@@ -58,9 +58,9 @@ class dynarray {
   static_assert(std::is_same<typename std::remove_cv<value_type>::type, value_type>::value,
                 "cpp_util::dynarray must have a non-const, non-volatile value_type");
 
-  /*******************************************************************************************************************/
-  /**                                                 construction                                                  **/
-  /*******************************************************************************************************************/
+  /**************************************************************************************************************************************/
+  /**                                                           construction                                                           **/
+  /**************************************************************************************************************************************/
   DYNARRAY_CONSTEXPR dynarray() noexcept = default;
   DYNARRAY_CONSTEXPR explicit dynarray(size_type size) : size_{size}, data_{new value_type[size]} {}
   DYNARRAY_CONSTEXPR dynarray(size_type size, const value_type& init) : dynarray(size) {
@@ -82,14 +82,14 @@ class dynarray {
   DYNARRAY_CONSTEXPR dynarray(dynarray&& other) noexcept
       : size_{std::exchange(other.size_, 0)}, data_{std::exchange(other.data_, nullptr)} {}
 
-  /*******************************************************************************************************************/
-  /**                                                  destruction                                                  **/
-  /*******************************************************************************************************************/
+  /**************************************************************************************************************************************/
+  /**                                                           destruction                                                            **/
+  /**************************************************************************************************************************************/
   DYNARRAY_CONSTEXPR ~dynarray() { delete[] data_; }
 
-  /*******************************************************************************************************************/
-  /**                                                  assignment                                                   **/
-  /*******************************************************************************************************************/
+  /**************************************************************************************************************************************/
+  /**                                                            assignment                                                            **/
+  /**************************************************************************************************************************************/
   DYNARRAY_CONSTEXPR dynarray& operator=(const dynarray& other) {
     // guard against self assignment
     if (this != std::addressof(other)) {
@@ -126,9 +126,9 @@ class dynarray {
     return *this;
   }
 
-  /*******************************************************************************************************************/
-  /**                                                 element access                                                **/
-  /*******************************************************************************************************************/
+  /**************************************************************************************************************************************/
+  /**                                                          element access                                                          **/
+  /**************************************************************************************************************************************/
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference at(const size_type pos) {
     if (pos >= size_) throw std::out_of_range{"Index out-of-range: pos >= this->size()"};
     return data_[pos];
@@ -164,9 +164,9 @@ class dynarray {
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR pointer data() { return data_; }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_pointer data() const { return data_; }
 
-  /*******************************************************************************************************************/
-  /**                                                iterator support                                               **/
-  /*******************************************************************************************************************/
+  /**************************************************************************************************************************************/
+  /**                                                         iterator support                                                         **/
+  /**************************************************************************************************************************************/
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR iterator begin() noexcept { return data_; }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR iterator end() noexcept { return data_ + size_; }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_iterator begin() const noexcept { return data_; }
@@ -180,18 +180,18 @@ class dynarray {
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator crbegin() const noexcept { return std::make_reverse_iterator(this->end()); }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator crend() const noexcept { return std::make_reverse_iterator(this->begin()); }
 
-  /*******************************************************************************************************************/
-  /**                                                   capacity                                                    **/
-  /*******************************************************************************************************************/
+  /**************************************************************************************************************************************/
+  /**                                                             capacity                                                             **/
+  /**************************************************************************************************************************************/
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR bool empty() const noexcept { return size_ == 0; }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR size_type size() const noexcept { return size_; }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR static size_type max_size() noexcept {
     return std::numeric_limits<difference_type>::max() / sizeof(value_type);
   }
 
-  /*******************************************************************************************************************/
-  /**                                                   operations                                                  **/
-  /*******************************************************************************************************************/
+  /**************************************************************************************************************************************/
+  /**                                                            operations                                                            **/
+  /**************************************************************************************************************************************/
   DYNARRAY_CONSTEXPR void swap(dynarray& other) noexcept {
     std::swap(size_, other.size_);
     std::swap(data_, other.data_);
@@ -210,9 +210,9 @@ class dynarray {
     std::generate(this->begin(), this->end(), gen);
   }
 
-  /*******************************************************************************************************************/
-  /**                                              non-member functions                                             **/
-  /*******************************************************************************************************************/
+  /**************************************************************************************************************************************/
+  /**                                                       non-member functions                                                       **/
+  /**************************************************************************************************************************************/
   DYNARRAY_CONSTEXPR friend void swap(dynarray& lhs, dynarray& rhs) noexcept { lhs.swap(rhs); }
 #if __cplusplus >= 202002L
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
@@ -240,9 +240,9 @@ class dynarray {
   pointer data_{nullptr};
 };
 
-/*******************************************************************************************************************/
-/**                                               deduction guides                                                **/
-/*******************************************************************************************************************/
+/****************************************************************************************************************************************/
+/**                                                          deduction guides                                                          **/
+/****************************************************************************************************************************************/
 #if __cplusplus >= 201703L
 template <typename ForwardIt>
 dynarray(ForwardIt, ForwardIt) -> dynarray<typename std::iterator_traits<ForwardIt>::value_type>;
