@@ -186,7 +186,9 @@ class dynarray {
   /*******************************************************************************************************************/
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR bool empty() const noexcept { return size_ == 0; }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR size_type size() const noexcept { return size_; }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR static size_type max_size() noexcept { return std::numeric_limits<difference_type>::max(); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR static size_type max_size() noexcept {
+    return std::numeric_limits<difference_type>::max() / sizeof(value_type);
+  }
 
   /*******************************************************************************************************************/
   /**                                                   operations                                                  **/

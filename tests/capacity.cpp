@@ -24,5 +24,7 @@ TEST_CASE("dynarray capacity member functions", "[capacity]") {
     CHECK(arr.size() == 6);
   }
 
-  SECTION("max_size() member function") { CHECK(cpp_util::dynarray<int>::max_size() == std::numeric_limits<std::ptrdiff_t>::max()); }
+  SECTION("max_size() member function") {
+    CHECK(cpp_util::dynarray<int>::max_size() == (std::numeric_limits<std::ptrdiff_t>::max() / sizeof(int)));
+  }
 }
