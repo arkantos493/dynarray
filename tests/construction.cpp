@@ -38,6 +38,11 @@ TEST_CASE("dynarray constructors", "[construction]") {
 
     REQUIRE(arr.size() == 10);
     CHECK(std::all_of(arr.data(), arr.data() + 10, [](const int i) { return i == 42; }));
+
+#if __cplusplus >= 201703L
+    // test deduction guide
+    cpp_util::dynarray arr2(vec.begin(), vec.end());
+#endif
   }
 
   SECTION("initializer_list constructor") {
