@@ -47,7 +47,11 @@ TEST_CASE("dynarray other member functions", "[operations]") {
   }
 
   SECTION("generate() member function") {
-    arr.generate([n = 0]() mutable { return n++ * 2; });
+    auto gen = []() {
+      static int n = 0;
+      return n++ * 2;
+    };
+    arr.generate(gen);
     for (std::size_t i = 0; i < 10; ++i) {
       CHECK(arr[i] == i * 2);
     }

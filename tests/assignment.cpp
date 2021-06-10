@@ -22,7 +22,7 @@ TEST_CASE("dynarray assignment operators", "[assignment]") {
     arr2 = arr1;
 
     REQUIRE(arr1.size() == arr2.size());
-    CHECK(std::equal(arr1.data(), arr1.data() + 3, arr2.data(), arr2.data() + 3));
+    CHECK(std::equal(arr1.data(), arr1.data() + 3, arr2.data()));
   }
 
   SECTION("move-assignment operator") {
