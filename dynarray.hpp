@@ -37,6 +37,27 @@
 
 namespace cpp_util {
 
+namespace detail {
+#if __cplusplus <= 201103L
+// see: https://en.cppreference.com/w/cpp/utility/exchange
+template <class T, class U = T>
+T exchange(T& obj, U&& new_value) {
+  T old_value = std::move(obj);
+  obj = std::forward<U>(new_value);
+  return old_value;
+}
+
+// see: https://en.cppreference.com/w/cpp/iterator/make_reverse_iterator
+template <class Iter>
+constexpr std::reverse_iterator<Iter> make_reverse_iterator(Iter i) {
+  return std::reverse_iterator<Iter>(i);
+}
+#else
+using std::exchange;
+using std::make_reverse_iterator;
+#endif
+}  // namespace detail
+
 template <typename T>
 class dynarray {
  public:
@@ -80,7 +101,7 @@ class dynarray {
     std::copy(other.cbegin(), other.cend(), this->begin());
   }
   DYNARRAY_CONSTEXPR dynarray(dynarray&& other) noexcept
-      : size_{std::exchange(other.size_, 0)}, data_{std::exchange(other.data_, nullptr)} {}
+      : size_{detail::exchange(other.size_, 0)}, data_{detail::exchange(other.data_, nullptr)} {}
 
   /**************************************************************************************************************************************/
   /**                                                           destruction                                                            **/
@@ -173,12 +194,20 @@ class dynarray {
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_iterator end() const noexcept { return data_ + size_; }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_iterator cbegin() const noexcept { return data_; }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_iterator cend() const noexcept { return data_ + size_; }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reverse_iterator rbegin() noexcept { return std::make_reverse_iterator(this->end()); }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reverse_iterator rend() noexcept { return std::make_reverse_iterator(this->begin()); }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator rbegin() const noexcept { return std::make_reverse_iterator(this->end()); }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator rend() const noexcept { return std::make_reverse_iterator(this->begin()); }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator crbegin() const noexcept { return std::make_reverse_iterator(this->end()); }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator crend() const noexcept { return std::make_reverse_iterator(this->begin()); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reverse_iterator rbegin() noexcept { return detail::make_reverse_iterator(this->end()); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reverse_iterator rend() noexcept { return detail::make_reverse_iterator(this->begin()); }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator rbegin() const noexcept {
+    return detail::make_reverse_iterator(this->end());
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator rend() const noexcept {
+    return detail::make_reverse_iterator(this->begin());
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator crbegin() const noexcept {
+    return detail::make_reverse_iterator(this->end());
+  }
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reverse_iterator crend() const noexcept {
+    return detail::make_reverse_iterator(this->begin());
+  }
 
   /**************************************************************************************************************************************/
   /**                                                             capacity                                                             **/
@@ -224,7 +253,15 @@ class dynarray {
   }
 #else
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
+#if __cplusplus <= 201103L
+    if (std::distance(lhs.cbegin(), lhs.cend()) != std::distance(rhs.cbegin(), rhs.cend())) {
+      return false;
+    } else {
+      return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin());
+    }
+#else
     return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+#endif
   }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator!=(const dynarray& lhs, const dynarray& rhs) noexcept { return !(lhs == rhs); }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator<(const dynarray& lhs, const dynarray& rhs) noexcept {
