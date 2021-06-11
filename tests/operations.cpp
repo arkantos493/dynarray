@@ -51,7 +51,7 @@ TEST_CASE("dynarray other member functions", "[operations]") {
       static int n = 0;
       return n++ * 2;
     };
-    arr.generate(gen);
+    arr.generate<int(*)()>(gen);
     for (std::size_t i = 0; i < 10; ++i) {
       CHECK(arr[i] == static_cast<int>(i) * 2);
     }
