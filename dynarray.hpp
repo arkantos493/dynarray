@@ -101,7 +101,7 @@ class dynarray {
     std::copy(other.cbegin(), other.cend(), this->begin());
   }
   DYNARRAY_CONSTEXPR dynarray(dynarray&& other) noexcept
-      : size_{detail::exchange(other.size_, 0)}, data_{detail::exchange(other.data_, nullptr)} {}
+      : size_{detail::exchange(other.size_, size_type{0})}, data_{detail::exchange(other.data_, nullptr)} {}
 
   /**************************************************************************************************************************************/
   /**                                                           destruction                                                            **/
