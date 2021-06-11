@@ -5,10 +5,5 @@
  * Main file for Catch2 test framework.
  */
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
-
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-
-#pragma clang diagnostic pop
