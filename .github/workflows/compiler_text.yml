@@ -28,7 +28,7 @@ jobs:
             export PRESET=clang
             export COMPILER=$(echo ${{ matrix.compiler }} | sed "s/clang/clang++/")
           fi
-          cmake --preset $PRESET -DENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=COMPILER .
+          cmake --preset $PRESET -DENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=$COMPILER .
           cmake --build --preset $PRESET
           ctest --preset $PRESET
 
