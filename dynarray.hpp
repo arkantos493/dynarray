@@ -247,7 +247,7 @@ class dynarray {
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
     return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
-  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend std::string_ordering operator<=>(const dynarray& lhs, const dynarray& rhs) noexcept {
+  DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend std::strong_ordering operator<=>(const dynarray& lhs, const dynarray& rhs) noexcept {
     return lhs.size() != rhs.size() ? lhs.size() <=> rhs.size()
                                     : std::lexicographical_compare_three_way(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
