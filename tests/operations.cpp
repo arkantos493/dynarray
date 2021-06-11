@@ -37,12 +37,12 @@ TEST_CASE("dynarray other member functions", "[operations]") {
   SECTION("iota() member function") {
     arr.iota();
     for (std::size_t i = 0; i < 10; ++i) {
-      CHECK(arr[i] == i);
+      CHECK(arr[i] == static_cast<int>(i));
     }
 
     arr.iota(42);
     for (std::size_t i = 0; i < 10; ++i) {
-      CHECK(arr[i] == i + 42);
+      CHECK(arr[i] == static_cast<int>(i) + 42);
     }
   }
 
@@ -53,7 +53,7 @@ TEST_CASE("dynarray other member functions", "[operations]") {
     };
     arr.generate(gen);
     for (std::size_t i = 0; i < 10; ++i) {
-      CHECK(arr[i] == i * 2);
+      CHECK(arr[i] == static_cast<int>(i) * 2);
     }
   }
 }
