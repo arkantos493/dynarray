@@ -40,7 +40,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU"
         OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
     set(COMPILER_STD_FLAG "-std=c++")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(COMPILED_STD_FLAG "/std:c++")
+    set(COMPILER_STD_FLAG "/std:c++")
 else ()
     message(FATAL_ERROR "Unrecognized Compiler!")
 endif ()
