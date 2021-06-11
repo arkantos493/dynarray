@@ -6,6 +6,9 @@ project(dynarray
 
 add_executable(dynarray examples.cpp dynarray.hpp)
 
+# minimum required C++ version is C++11
+target_compile_features(dynarray PRIVATE cxx_std_11)
+
 # enable testing
 option(ENABLE_TESTS "Enable testing using Catch2" OFF)
 if (ENABLE_TESTS)
