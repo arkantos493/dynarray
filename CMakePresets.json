@@ -57,6 +57,9 @@
       "configurePreset": "gcc",
       "output": {
         "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
       }
     },
     {
@@ -64,6 +67,9 @@
       "configurePreset": "clang",
       "output": {
         "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
       }
     },
     {
@@ -71,6 +77,9 @@
       "configurePreset": "msvc",
       "output": {
         "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
       }
     }
   ]
