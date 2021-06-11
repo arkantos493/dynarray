@@ -50,5 +50,28 @@
       "name": "msvc",
       "configurePreset": "msvc"
     }
+  ],
+  "testPresets": [
+    {
+      "name": "gcc",
+      "configurePreset": "gcc",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "clang",
+      "configurePreset": "clang",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "msvc",
+      "configurePreset": "msvc",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
   ]
 }
