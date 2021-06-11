@@ -23,10 +23,12 @@ jobs:
         run: |
           if [[ ${{ matrix.compiler }} == g++* ]]; then
             export PRESET=gcc
+            export COMPILER=${{ matrix.compiler }}
           else
             export PRESET=clang
+            export COMPILER=$(echo ${{ matrix.compiler }} | sed "s/clang/clang++/")
           fi
-          cmake --preset $PRESET -DENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} .
+          cmake --preset $PRESET -DENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=COMPILER .
           cmake --build --preset $PRESET
           ctest --preset $PRESET
 
