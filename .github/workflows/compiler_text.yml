@@ -49,6 +49,7 @@ jobs:
         uses: actions/checkout@v2
       - name: "Build project and run tests"
         run: |
+          sed -i 's|target_compile_features(dynarray PRIVATE cxx_std_11)|target_compile_options(dynarray PRIVATE "/std:c++latest")|g' ./CMakeLists.txt
           cmake --preset msvc -G "NMake Makefiles" -DENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=CL -DCMAKE_CXX_COMPILER_FORCED=ON .
           cmake --build --preset msvc
           ctest --preset msvc
