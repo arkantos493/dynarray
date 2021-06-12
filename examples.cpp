@@ -60,13 +60,11 @@ int main() {
     std::cout << i << ' ';
   }
   std::cout << std::endl;
-  auto rand = []() {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    static std::uniform_int_distribution<int> dist(1, 10);
-    return dist(gen);
-  };
-  arr.generate(rand);
+
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<int> dist(1, 10);
+  arr.generate([&]() { return dist(gen); });
   for (const int i : arr) {
     std::cout << i << ' ';
   }
