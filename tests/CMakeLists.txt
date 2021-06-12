@@ -14,47 +14,40 @@ set(TEST_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/operations.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/non_member_functions.cpp)
 
-# function to add test cases using different C++ standards
-function(register_test cxx_standard)
-    # create executable
-    set(TEST_CASE_NAME "test_cases_cxx${cxx_standard}")
-    add_executable(${TEST_CASE_NAME} ${CATCH_INCLUDE_DIR}/catch_main.cpp ${TEST_SOURCES})
-    target_include_directories(${TEST_CASE_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
-    # link against Catch
-    target_link_libraries(${TEST_CASE_NAME} Catch)
-    # set requested C++ standard
-    set_property(TARGET ${TEST_CASE_NAME}
-            PROPERTY CXX_STANDARD ${cxx_standard}
-            CXX_STANDARD_REQUIRED ON
-            CXX_EXTENSIONS OFF)
 
-    # add test for CTest
-    set(TEST_NAME "test_cxx${cxx_standard}")
-    add_test(NAME ${TEST_NAME} COMMAND ${TEST_CASE_NAME})
+# function to add test cases using different C++ standards
+include(CheckCXXCompilerFlag)
+function(register_test cxx_standard_flag)
+    # if MSVC is used, change compiler flag
+    if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+        string(REPLACE "=" ":" cxx_standard_flag ${cxx_standard_flag})
+    endif ()
+    string(SUBSTRING ${cxx_standard_flag} 8 -1 CXX_STANDARD_VALUE)
+
+    # check if compiler flag is supported
+    check_cxx_compiler_flag(${cxx_standard_flag} HAS_FLAG_STD_CXX_${CXX_STANDARD_VALUE})
+    if (${HAS_FLAG_STD_CXX_${CXX_STANDARD_VALUE}})
+        # create executable
+        string(SUBSTRING ${cxx_standard_flag} 8 -1 CXX_STANDARD_VALUE)
+        set(TEST_CASE_NAME "test_cases_cxx${CXX_STANDARD_VALUE}")
+        add_executable(${TEST_CASE_NAME} ${CATCH_INCLUDE_DIR}/catch_main.cpp ${TEST_SOURCES})
+        target_include_directories(${TEST_CASE_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
+        # link against Catch
+        target_link_libraries(${TEST_CASE_NAME} Catch)
+        # set requested C++ standard
+        target_compile_options(${TEST_CASE_NAME} PUBLIC ${cxx_standard_flag})
+
+        # add test for CTest
+        set(TEST_NAME "test_cxx${CXX_STANDARD_VALUE}")
+        add_test(NAME ${TEST_NAME} COMMAND ${TEST_CASE_NAME})
+    endif ()
+    unset(${HAS_FLAG_STD_CXX_${CXX_STANDARD_VALUE}} CACHE)
 endfunction()
 
 
-# set compiler language standard flag
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(COMPILER_STD_FLAG "-std=c++")
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(COMPILER_STD_FLAG "/std:c++")
-else ()
-    message(FATAL_ERROR "Unrecognized Compiler!")
-endif ()
-
-include(CheckCXXCompilerFlag)
 # register tests
-register_test(11)
-check_cxx_compiler_flag(${COMPILER_STD_FLAG}14 HAS_FLAG_STD_CXX14)
-if (HAS_FLAG_STD_CXX14)
-    register_test(14)
-endif ()
-check_cxx_compiler_flag(${COMPILER_STD_FLAG}17 HAS_FLAG_STD_CXX17)
-if (HAS_FLAG_STD_CXX17)
-    register_test(17)
-endif ()
-check_cxx_compiler_flag(${COMPILER_STD_FLAG}20 HAS_FLAG_STD_CXX20)
-if (HAS_FLAG_STD_CXX20)
-    register_test(20)
-endif ()
+register_test(-std=c++11)
+register_test(-std=c++14)
+register_test(-std=c++17)
+register_test(-std=c++20)
+register_test(-std=c++latest)
