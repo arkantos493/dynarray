@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include <random>
 
 #include "dynarray.hpp"
 
@@ -59,7 +60,13 @@ int main() {
     std::cout << i << ' ';
   }
   std::cout << std::endl;
-  arr.generate(std::rand);
+  auto rand = []() {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<int> dist(1, 10);
+    return dist(gen);
+  };
+  arr.generate(rand);
   for (const int i : arr) {
     std::cout << i << ' ';
   }
