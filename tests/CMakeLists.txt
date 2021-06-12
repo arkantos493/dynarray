@@ -35,9 +35,7 @@ endfunction()
 
 
 # set compiler language standard flag
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU"
-        OR CMAKE_CXX_COMPILER_ID MATCHES "Clang"
-        OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(COMPILER_STD_FLAG "-std=c++")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     set(COMPILER_STD_FLAG "/std:c++")
