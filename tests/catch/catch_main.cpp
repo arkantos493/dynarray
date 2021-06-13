@@ -5,15 +5,5 @@
  * Main file for Catch2 test framework.
  */
 
-
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#endif
-
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
