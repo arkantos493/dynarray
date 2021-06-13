@@ -10,8 +10,8 @@ add_executable(dynarray examples.cpp dynarray.hpp)
 target_compile_features(dynarray PRIVATE cxx_std_11)
 
 # enable testing
-option(ENABLE_TESTS "Enable testing using Catch2" OFF)
-if (ENABLE_TESTS)
+option(CPP_UTIL_ENABLE_TESTS "Enable testing using Catch2" OFF)
+if (CPP_UTIL_ENABLE_TESTS)
     message(STATUS "Enabled testing using Catch2.")
     enable_testing()
     add_subdirectory(tests)

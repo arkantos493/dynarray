@@ -29,7 +29,7 @@ jobs:
             export PRESET=clang
             export COMPILER=$(echo ${{ matrix.compiler }} | sed "s/clang/clang++/")
           fi
-          cmake --preset $PRESET -DENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=$COMPILER .
+          cmake --preset $PRESET -DCPP_UTIL_ENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=$COMPILER .
           cmake --build --preset $PRESET
           ctest --preset $PRESET
 
@@ -51,6 +51,6 @@ jobs:
       - name: "Build project and run tests"
         run: |
           sed -i 's|target_compile_features(dynarray PRIVATE cxx_std_11)|target_compile_options(dynarray PRIVATE "/std:c++latest")|g' ./CMakeLists.txt
-          cmake --preset msvc -G "NMake Makefiles" -DENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=CL -DCMAKE_CXX_COMPILER_FORCED=ON .
+          cmake --preset msvc -G "NMake Makefiles" -DCPP_UTIL_ENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=CL -DCMAKE_CXX_COMPILER_FORCED=ON .
           cmake --build --preset msvc
           ctest --preset msvc
