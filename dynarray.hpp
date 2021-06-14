@@ -14,7 +14,6 @@
 #include <initializer_list>  // std::initializer_list
 #include <iterator>     // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits, std::forward_iterator_tag
 #include <limits>       // std::numeric_limits
-#include <memory>       // std::addressof
 #include <numeric>      // std::iota
 #include <stdexcept>    // std::out_of_range
 #include <type_traits>  // std::remove_cv, std::enable_if, std::is_convertible
@@ -30,7 +29,7 @@
 #endif
 
 #if defined(__cpp_constexpr_dynamic_alloc) && defined(__cpp_lib_constexpr_algorithms) && defined(__cpp_lib_constexpr_numeric) && \
-    defined(__cpp_constexpr) && defined(__cpp_lib_addressof_constexpr) && defined(__cpp_lib_array_constexpr)
+    defined(__cpp_constexpr) && defined(__cpp_lib_array_constexpr)
 #define DYNARRAY_CONSTEXPR constexpr
 #else
 #define DYNARRAY_CONSTEXPR
@@ -117,7 +116,7 @@ class dynarray {
   /**************************************************************************************************************************************/
   DYNARRAY_CONSTEXPR dynarray& operator=(const dynarray& other) {
     // guard against self assignment
-    if (this != std::addressof(other)) {
+    if (this != &other) {
       // if sizes mismatch use copy-and-swap idiom,
       // otherwise just directly assign new values
       if (other.size_ != size_) {
@@ -131,11 +130,8 @@ class dynarray {
     return *this;
   }
   DYNARRAY_CONSTEXPR dynarray& operator=(dynarray&& other) noexcept {
-    // guard against self assignment
-    if (this != std::addressof(other)) {
-      dynarray tmp{std::move(other)};
-      this->swap(tmp);
-    }
+    dynarray tmp{std::move(other)};
+    this->swap(tmp);
     return *this;
   }
   DYNARRAY_CONSTEXPR dynarray& operator=(std::initializer_list<value_type> ilist) {
