@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021-06-09 - Marcel Breyer - All Rights Reserved
+ * Copyright (C) 2021-06-14 - Marcel Breyer - All Rights Reserved
  * Licensed under the MIT License. See LICENSE.md file in the project root for full license information.
  *
  * Implements a runtime fixed-size array.
@@ -19,17 +19,18 @@
 #include <stdexcept>    // std::out_of_range
 #include <type_traits>  // std::remove_cv, std::enable_if, std::is_convertible
 #include <utility>      // std::exchange
-#if __cplusplus >= 202002L
+#if defined(__cpp_impl_three_way_comparison) && defined(__cpp_lib_three_way_comparison)
 #include <compare>  // std::strong_ordering
 #endif
 
-#if __cplusplus >= 201703L
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(nodiscard)
 #define DYNARRAY_NODISCARD [[nodiscard]]
 #else
 #define DYNARRAY_NODISCARD
 #endif
 
-#if __cplusplus >= 202002L
+#if defined(__cpp_constexpr_dynamic_alloc) && defined(__cpp_lib_constexpr_algorithms) && defined(__cpp_lib_constexpr_numeric) && \
+    defined(__cpp_constexpr) && defined(__cpp_lib_addressof_constexpr) && defined(__cpp_lib_array_constexpr)
 #define DYNARRAY_CONSTEXPR constexpr
 #else
 #define DYNARRAY_CONSTEXPR
@@ -38,7 +39,19 @@
 namespace cpp_util {
 
 namespace detail {
-#if __cplusplus <= 201103L
+#if defined(__cpp_lib_make_reverse_iterator)
+using std::make_reverse_iterator;
+#else
+// see: https://en.cppreference.com/w/cpp/iterator/make_reverse_iterator
+template <class Iter>
+constexpr std::reverse_iterator<Iter> make_reverse_iterator(Iter i) {
+  return std::reverse_iterator<Iter>(i);
+}
+#endif
+
+#if defined(__cpp_lib_exchange_function)
+using std::exchange;
+#else
 // see: https://en.cppreference.com/w/cpp/utility/exchange
 template <class T, class U = T>
 T exchange(T& obj, U&& new_value) {
@@ -46,15 +59,6 @@ T exchange(T& obj, U&& new_value) {
   obj = std::forward<U>(new_value);
   return old_value;
 }
-
-// see: https://en.cppreference.com/w/cpp/iterator/make_reverse_iterator
-template <class Iter>
-constexpr std::reverse_iterator<Iter> make_reverse_iterator(Iter i) {
-  return std::reverse_iterator<Iter>(i);
-}
-#else
-using std::exchange;
-using std::make_reverse_iterator;
 #endif
 }  // namespace detail
 
@@ -243,7 +247,7 @@ class dynarray {
   /**                                                       non-member functions                                                       **/
   /**************************************************************************************************************************************/
   DYNARRAY_CONSTEXPR friend void swap(dynarray& lhs, dynarray& rhs) noexcept { lhs.swap(rhs); }
-#if __cplusplus >= 202002L
+#if defined(__cpp_impl_three_way_comparison) && defined(__cpp_lib_three_way_comparison)
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
     return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
   }
@@ -253,14 +257,14 @@ class dynarray {
   }
 #else
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
-#if __cplusplus <= 201103L
+#if defined(__cpp_lib_robust_nonmodifying_seq_ops)
+    return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+#else
     if (std::distance(lhs.cbegin(), lhs.cend()) != std::distance(rhs.cbegin(), rhs.cend())) {
       return false;
     } else {
       return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin());
     }
-#else
-    return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 #endif
   }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator!=(const dynarray& lhs, const dynarray& rhs) noexcept { return !(lhs == rhs); }
@@ -280,7 +284,7 @@ class dynarray {
 /****************************************************************************************************************************************/
 /**                                                          deduction guides                                                          **/
 /****************************************************************************************************************************************/
-#if __cplusplus >= 201703L
+#if defined(__cpp_deduction_guides)
 template <typename ForwardIt>
 dynarray(ForwardIt, ForwardIt) -> dynarray<typename std::iterator_traits<ForwardIt>::value_type>;
 #endif
