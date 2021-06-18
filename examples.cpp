@@ -40,8 +40,8 @@ int main() {
     cpp_util::dynarray<int> arr3(10, 4);
     cpp_util::dynarray<int> arr4 = {1, 2, 3, 4, 5};
 
-    std::vector<float> vec = {1, 2, 3, 4, 5};
-    cpp_util::dynarray<float> arr5(vec.begin(), vec.end());
+    std::vector<int> vec = {1, 2, 3, 4, 5};
+    cpp_util::dynarray<int> arr5(vec.begin(), vec.end());
 
     cpp_util::dynarray<int> arr6 = arr3;
     cpp_util::dynarray<int> arr7 = std::move(arr3);
@@ -69,7 +69,7 @@ int main() {
 
   // iterator support
   {
-      cpp_util::dynarray<float> iter_arr = {1.1, 2.2, 3.3, 4.4, 5.5};
+      cpp_util::dynarray<double> iter_arr = {1.1, 2.2, 3.3, 4.4, 5.5};
       for (auto it = iter_arr.begin(), end = iter_arr.end(); it != end; ++it) {
         *it += 6.6;
       }
