@@ -89,7 +89,7 @@ class dynarray {
   DYNARRAY_CONSTEXPR explicit dynarray(size_type size) : size_{size}, data_{new value_type[size]} {}
   DYNARRAY_CONSTEXPR dynarray(size_type size, const value_type& init) : dynarray(size) {
     // initialize with same value
-    std::fill(this->begin(), this->end(), init);
+    this->fill(init);
   }
   template <typename ForwardIt, typename std::enable_if<std::is_convertible<typename std::iterator_traits<ForwardIt>::iterator_category,
                                                                             std::forward_iterator_tag>::value,
