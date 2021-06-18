@@ -85,3 +85,5 @@ All tests were run using the following compiler flags:
   - all functions are now marked as `constexpr`
   - the relational operators are now implemented in terms of the three-way comparison
     operator `operator<=>(const dynarray&, const dynarray&)`
+    
+The actual features are enabled using the specific features test macros and not the `__cplusplus` macro.
