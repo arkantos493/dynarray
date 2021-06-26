@@ -1,7 +1,7 @@
 # cpp_util::dynarray
 
-[![Test with GCC, Clang and MSVC](https://github.com/arkantos493/dynarray/actions/workflows/compiler_test.yml/badge.svg)](https://github.com/arkantos493/dynarray/actions/workflows/compiler_test.yml) <br/>
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4f9e7aed05774d538c7fa6f99f81c26f)](https://www.codacy.com/gh/arkantos493/dynarray/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=arkantos493/dynarray&amp;utm_campaign=Badge_Grade) <br/>
+[![Test with GCC, Clang and MSVC](https://github.com/arkantos493/dynarray/actions/workflows/compiler_test.yml/badge.svg)](https://github.com/arkantos493/dynarray/actions/workflows/compiler_test.yml) &ensp;
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4f9e7aed05774d538c7fa6f99f81c26f)](https://www.codacy.com/gh/arkantos493/dynarray/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=arkantos493/dynarray&amp;utm_campaign=Badge_Grade) &ensp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Implementation of a runtime fixed-size array (loosely based on [N3662](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3662)).
@@ -83,6 +83,7 @@ All tests were run using the following compiler flags:
 
 - `C++14`:
   - the functions `exchange(T&, U&&)` and `make_reverse_iterator(Iter)` are now implemented using the `std::` versions
+  
   - `operator==(const dynarray&, const dynarray&)` is now implemented
     using `std::equal(InputIt1, InputIt1, InputIt2, InputIt2)`
 
@@ -92,6 +93,7 @@ All tests were run using the following compiler flags:
 
 - `C++20`:
   - all functions are now marked as `constexpr`
+    
   - the relational operators are now implemented in terms of the three-way comparison
     operator `operator<=>(const dynarray&, const dynarray&)`
     
