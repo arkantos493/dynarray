@@ -164,7 +164,7 @@ class dynarray {
   DYNARRAY_CONSTEXPR void assign(ForwardIt first, ForwardIt last) {
     // if sizes mismatch use copy-and-swap idiom,
     // otherwise just directly assign new values
-    if (std::distance(first, last) != size_) {
+    if (static_cast<size_type>(std::distance(first, last)) != size_) {
       dynarray tmp(first, last);
       this->swap(tmp);
     } else {
