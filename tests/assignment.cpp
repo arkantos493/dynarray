@@ -41,4 +41,25 @@ TEST_CASE("dynarray assignment operators", "[assignment]") {
     REQUIRE(arr2.size() == 3);
     CHECK(std::all_of(arr2.data(), arr2.data() + 3, [](const int i) { return i == 42; }));
   }
+
+  SECTION("assign using count and value") {
+    arr2.assign(10, 404);
+
+    REQUIRE(arr2.size() == 10);
+    CHECK(std::all_of(arr2.data(), arr2.data() + 10, [](const int i) { return i == 404; }));
+  }
+
+  SECTION("assign using iterator pair") {
+    arr2.assign(arr1.begin(), arr1.end());
+
+    REQUIRE(arr2.size() == 3);
+    CHECK(std::all_of(arr2.data(), arr2.data() + 3, [](const int i) { return i == 42; }));
+  }
+
+  SECTION("assign using initializer_list") {
+    arr2.assign({42, 42, 42});
+
+    REQUIRE(arr2.size() == 3);
+    CHECK(std::all_of(arr2.data(), arr2.data() + 3, [](const int i) { return i == 42; }));
+  }
 }

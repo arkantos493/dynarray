@@ -147,6 +147,35 @@ class dynarray {
     return *this;
   }
 
+  DYNARRAY_CONSTEXPR void assign(const size_type count, const value_type& value) {
+    // if sizes mismatch use copy-and-swap idiom,
+    // otherwise just directly assign new values
+    if (count != size_) {
+      dynarray tmp(count, value);
+      this->swap(tmp);
+    } else {
+      // perform assignment
+      this->fill(value);
+    }
+  }
+  template <typename ForwardIt, typename std::enable_if<std::is_convertible<typename std::iterator_traits<ForwardIt>::iterator_category,
+                                                                            std::forward_iterator_tag>::value,
+                                                        bool>::type = true>
+  DYNARRAY_CONSTEXPR void assign(ForwardIt first, ForwardIt last) {
+    // if sizes mismatch use copy-and-swap idiom,
+    // otherwise just directly assign new values
+    if (std::distance(first, last) != size_) {
+      dynarray tmp(first, last);
+      this->swap(tmp);
+    } else {
+      // perform assignment
+      std::copy(first, last, this->begin());
+    }
+  }
+  DYNARRAY_CONSTEXPR void assign(std::initializer_list<value_type> ilist) {
+    this->assign(ilist.begin(), ilist.end());
+  }
+
   /**************************************************************************************************************************************/
   /**                                                          element access                                                          **/
   /**************************************************************************************************************************************/
