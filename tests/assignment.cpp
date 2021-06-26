@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021-06-06 - Marcel Breyer - All Rights Reserved
+ * Copyright (C) 2021-06-26 - Marcel Breyer - All Rights Reserved
  * Licensed under the MIT License. See LICENSE.md file in the project root for full license information.
  *
  * Implements tests for the assignment operators of the cpp_util::dynarray class.
@@ -22,7 +22,7 @@ TEST_CASE("dynarray assignment operators", "[assignment]") {
     arr2 = arr1;
 
     REQUIRE(arr1.size() == arr2.size());
-    CHECK(std::equal(arr1.data(), arr1.data() + 3, arr2.data()));
+    CHECK(std::equal(arr1.begin(), arr1.end(), arr2.begin()));
   }
 
   SECTION("move-assignment operator") {
@@ -32,34 +32,34 @@ TEST_CASE("dynarray assignment operators", "[assignment]") {
     CHECK(arr1.data() == nullptr);
 
     REQUIRE(arr2.size() == 3);
-    CHECK(std::all_of(arr2.data(), arr2.data() + 3, [](const int i) { return i == 42; }));
+    CHECK(std::all_of(arr2.begin(), arr2.end(), [](const int i) { return i == 42; }));
   }
 
   SECTION("initializer_list-assignment operator") {
     arr2 = {42, 42, 42};
 
     REQUIRE(arr2.size() == 3);
-    CHECK(std::all_of(arr2.data(), arr2.data() + 3, [](const int i) { return i == 42; }));
+    CHECK(std::all_of(arr2.begin(), arr2.end(), [](const int i) { return i == 42; }));
   }
 
   SECTION("assign using count and value") {
     arr2.assign(10, 404);
 
     REQUIRE(arr2.size() == 10);
-    CHECK(std::all_of(arr2.data(), arr2.data() + 10, [](const int i) { return i == 404; }));
+    CHECK(std::all_of(arr2.begin(), arr2.end(), [](const int i) { return i == 404; }));
   }
 
   SECTION("assign using iterator pair") {
     arr2.assign(arr1.begin(), arr1.end());
 
     REQUIRE(arr2.size() == 3);
-    CHECK(std::all_of(arr2.data(), arr2.data() + 3, [](const int i) { return i == 42; }));
+    CHECK(std::all_of(arr2.begin(), arr2.end(), [](const int i) { return i == 42; }));
   }
 
   SECTION("assign using initializer_list") {
     arr2.assign({42, 42, 42});
 
     REQUIRE(arr2.size() == 3);
-    CHECK(std::all_of(arr2.data(), arr2.data() + 3, [](const int i) { return i == 42; }));
+    CHECK(std::all_of(arr2.begin(), arr2.end(), [](const int i) { return i == 42; }));
   }
 }

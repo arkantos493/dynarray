@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021-06-06 - Marcel Breyer - All Rights Reserved
+ * Copyright (C) 2021-06-26 - Marcel Breyer - All Rights Reserved
  * Licensed under the MIT License. See LICENSE.md file in the project root for full license information.
  *
  * Implements tests for the other member functions of the cpp_util::dynarray class.
@@ -19,19 +19,19 @@ TEST_CASE("dynarray other member functions", "[operations]") {
     arr1.swap(arr2);
 
     REQUIRE(arr1.size() == 5);
-    CHECK(std::all_of(arr1.data(), arr1.data() + 5, [](const int i) { return i == 2; }));
+    CHECK(std::all_of(arr1.begin(), arr1.end(), [](const int i) { return i == 2; }));
     REQUIRE(arr2.size() == 10);
-    CHECK(std::all_of(arr2.data(), arr2.data() + 10, [](const int i) { return i == 1; }));
+    CHECK(std::all_of(arr2.begin(), arr2.end(), [](const int i) { return i == 1; }));
   }
 
   cpp_util::dynarray<int> arr(10);
 
   SECTION("fill() member function") {
     arr.fill();
-    CHECK(std::all_of(arr.data(), arr.data() + 10, [](const int i) { return i == 0; }));
+    CHECK(std::all_of(arr.begin(), arr.end(), [](const int i) { return i == 0; }));
 
     arr.fill(42);
-    CHECK(std::all_of(arr.data(), arr.data() + 10, [](const int i) { return i == 42; }));
+    CHECK(std::all_of(arr.begin(), arr.end(), [](const int i) { return i == 42; }));
   }
 
   SECTION("iota() member function") {

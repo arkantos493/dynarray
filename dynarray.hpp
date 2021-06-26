@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021-06-14 - Marcel Breyer - All Rights Reserved
+ * Copyright (C) 2021-06-26 - Marcel Breyer - All Rights Reserved
  * Licensed under the MIT License. See LICENSE.md file in the project root for full license information.
  *
  * Implements a runtime fixed-size array.
