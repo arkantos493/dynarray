@@ -16,12 +16,14 @@ jobs:
     steps:
       - name: "Install ${{ matrix.compiler }}"
         run: |
+          g++ --version
           echo "deb http://dk.archive.ubuntu.com/ubuntu/ jammy main universe" | sudo tee -a /etc/apt/sources.list
           sudo apt update
           sudo apt upgrade
           sudo apt install ${{ matrix.compiler }}
           if [[ ${{ matrix.compiler }} == clang* ]]; then
             sudo apt install llvm-$(echo ${{ matrix.compiler }} | grep -o -E '[0-9]+')-dev
+            ${{ matrix.compiler }} -v
           fi
           ${{ matrix.compiler }} --version
       - name: "Install cmake 3.20"
