@@ -17,6 +17,7 @@ jobs:
       - name: "Install ${{ matrix.compiler }}"
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          echo "deb http://dk.archive.ubuntu.com/ubuntu/ bionic main universe" | sudo tee -a /etc/apt/sources.list
           sudo apt update -y
           sudo apt upgrade
           sudo apt install ${{ matrix.compiler }}
