@@ -8,16 +8,18 @@
 #ifndef CPP_UTIL_DYNARRAY_HPP
 #define CPP_UTIL_DYNARRAY_HPP
 
-#include <algorithm>  // std::fill, std::copy, std::swap, std::generate, std::equal, std::lexicographical_compare_three_way, std::lexicographical_compare
+#include <algorithm>         // std::fill, std::copy, std::swap, std::generate, std::equal, std::lexicographical_compare_three_way, std::lexicographical_compare
 #include <cassert>           // assert
 #include <cstddef>           // std::size_t, std::ptrdiff_t
 #include <initializer_list>  // std::initializer_list
-#include <iterator>     // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits, std::forward_iterator_tag
-#include <limits>       // std::numeric_limits
-#include <numeric>      // std::iota
-#include <stdexcept>    // std::out_of_range
-#include <type_traits>  // std::remove_cv, std::enable_if, std::is_convertible
-#include <utility>      // std::exchange
+#include <iterator>          // std::reverse_iterator, std::distance, std::make_reverse_iterator, std::iterator_traits, std::forward_iterator_tag
+#include <limits>            // std::numeric_limits
+#include <memory>            // std::addressof
+#include <numeric>           // std::iota
+#include <stdexcept>         // std::out_of_range
+#include <type_traits>       // std::remove_cv, std::enable_if, std::is_convertible
+#include <utility>           // std::exchange
+
 #if defined(__cpp_impl_three_way_comparison) && defined(__cpp_lib_three_way_comparison)
 #include <compare>  // std::strong_ordering
 #endif
@@ -38,6 +40,7 @@
 namespace cpp_util {
 
 namespace detail {
+
 #if defined(__cpp_lib_make_reverse_iterator)
 using std::make_reverse_iterator;
 #else
@@ -59,6 +62,7 @@ T exchange(T& obj, U&& new_value) {
   return old_value;
 }
 #endif
+
 }  // namespace detail
 
 template <typename T>
@@ -86,8 +90,8 @@ class dynarray {
   /**                                                           construction                                                           **/
   /**************************************************************************************************************************************/
   DYNARRAY_CONSTEXPR dynarray() noexcept = default;
-  DYNARRAY_CONSTEXPR explicit dynarray(size_type size) : size_{size}, data_{new value_type[size]} {}
-  DYNARRAY_CONSTEXPR dynarray(size_type size, const value_type& init) : dynarray(size) {
+  DYNARRAY_CONSTEXPR explicit dynarray(const size_type size) : size_{ size }, data_{ new value_type[size] } {}
+  DYNARRAY_CONSTEXPR dynarray(const size_type size, const value_type& init) : dynarray(size) {
     // initialize with same value
     this->fill(init);
   }
@@ -98,29 +102,32 @@ class dynarray {
     // copy values from iterator range
     std::copy(first, last, this->begin());
   }
-  DYNARRAY_CONSTEXPR dynarray(std::initializer_list<value_type> ilist) : dynarray{ilist.begin(), ilist.end()} {}
+  DYNARRAY_CONSTEXPR dynarray(std::initializer_list<value_type> ilist) : dynarray{ ilist.begin(), ilist.end() } {}
   DYNARRAY_CONSTEXPR dynarray(const dynarray& other) : dynarray(other.size_) {
     // copy values from other
     std::copy(other.cbegin(), other.cend(), this->begin());
   }
   DYNARRAY_CONSTEXPR dynarray(dynarray&& other) noexcept
-      : size_{detail::exchange(other.size_, size_type{0})}, data_{detail::exchange(other.data_, nullptr)} {}
+      : size_{ detail::exchange(other.size_, size_type{ 0 }) }, data_{ detail::exchange(other.data_, nullptr) } {}
 
   /**************************************************************************************************************************************/
   /**                                                           destruction                                                            **/
   /**************************************************************************************************************************************/
-  DYNARRAY_CONSTEXPR ~dynarray() { delete[] data_; }
+  DYNARRAY_CONSTEXPR ~dynarray() {
+    delete[] data_;
+    size_ = 0;
+  }
 
   /**************************************************************************************************************************************/
   /**                                                            assignment                                                            **/
   /**************************************************************************************************************************************/
   DYNARRAY_CONSTEXPR dynarray& operator=(const dynarray& other) {
     // guard against self assignment
-    if (this != &other) {
+    if (this != std::addressof(other)) {
       // if sizes mismatch use copy-and-swap idiom,
       // otherwise just directly assign new values
       if (other.size_ != size_) {
-        dynarray tmp{other};
+        dynarray tmp{ other };
         this->swap(tmp);
       } else {
         // perform copy
@@ -130,7 +137,7 @@ class dynarray {
     return *this;
   }
   DYNARRAY_CONSTEXPR dynarray& operator=(dynarray&& other) noexcept {
-    dynarray tmp{std::move(other)};
+    dynarray tmp{ std::move(other) };
     this->swap(tmp);
     return *this;
   }
@@ -138,7 +145,7 @@ class dynarray {
     // if sizes mismatch use copy-and-swap idiom,
     // otherwise just directly assign new values
     if (ilist.size() != size_) {
-      dynarray tmp{ilist};
+      dynarray tmp{ ilist };
       this->swap(tmp);
     } else {
       // perform assignment
@@ -172,9 +179,7 @@ class dynarray {
       std::copy(first, last, this->begin());
     }
   }
-  DYNARRAY_CONSTEXPR void assign(std::initializer_list<value_type> ilist) {
-    this->assign(ilist.begin(), ilist.end());
-  }
+  DYNARRAY_CONSTEXPR void assign(std::initializer_list<value_type> ilist) { this->assign(ilist.begin(), ilist.end()); }
 
   /**************************************************************************************************************************************/
   /**                                                          element access                                                          **/
@@ -188,11 +193,11 @@ class dynarray {
     return data_[pos];
   }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference operator[](const size_type pos) {
-    assert((pos < this->size()) && "Undefined behavior if pos >= size()!");
+    assert((pos < this->size()) && "Undefined behavior if pos >= this->size()!");
     return data_[pos];
   }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR const_reference operator[](const size_type pos) const {
-    assert((pos < this->size()) && "Undefined behavior if pos >= size()!");
+    assert((pos < this->size()) && "Undefined behavior if pos >= this->size()!");
     return data_[pos];
   }
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR reference front() {
