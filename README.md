@@ -1,12 +1,12 @@
 # cpp_util::dynarray
 
-[![Test with GCC, Clang and MSVC](https://github.com/arkantos493/dynarray/actions/workflows/compiler_test.yml/badge.svg)](https://github.com/arkantos493/dynarray/actions/workflows/compiler_test.yml) &ensp;
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4f9e7aed05774d538c7fa6f99f81c26f)](https://www.codacy.com/gh/arkantos493/dynarray/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=arkantos493/dynarray&amp;utm_campaign=Badge_Grade) &ensp;
+[![Test with GCC, Clang and MSVC](https://github.com/arkantos493/dynarray/actions/workflows/compiler_test.yml/badge.svg)](https://github.com/breyerml/dynarray/actions/workflows/compiler_test.yml) &ensp;
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4f9e7aed05774d538c7fa6f99f81c26f)](https://app.codacy.com/gh/breyerml/dynarray/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) &ensp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Implementation of a runtime fixed-size array (loosely based on [N3662](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3662)).
 
-In contrast to `std::array`, the size of a `cpp_util::dynarray` doesn't have to be a compile-time constant. <br>
+In contrast to `std::array`, the size of a `cpp_util::dynarray` doesn't have to be a compile-time constant. 
 Additionally, since a `cpp_util::dynarray` doesn't have to grow at runtime, there is no need to save a capacity resulting in less memory used (e.g. 2 byte vs. 3 byte).
 
 The API is inspired by the `std::array` and `std::vector` API without the member functions modifying its size. Three additional functions
@@ -18,7 +18,7 @@ are implemented:
 
 ## Prerequisites
 
-Any compiler supporting `C++11` should be sufficient (for more information see [Compiler Support](#compiler-support)). <br>
+Any compiler supporting `C++11` should be sufficient (for more information see [Compiler Support](#compiler-support)). 
 Additionally, at least [CMake](https://cmake.org/) `3.20` is required.
 
 The tests are implemented using [Catch2](https://github.com/catchorg/Catch2/tree/v2.x), which gets shipped as single header file with this repository.
@@ -47,7 +47,7 @@ cmake --build --preset [preset]
 ctest --preset [preset]
 ```
 
-Tests for all supported `C++` standards starting with `C++11` for the currently used compiler are generated. 
+Tests for all supported `C++` standards starting with `C++11` for the currently used compiler are generated.
 
 ## Compiler Support
 
@@ -90,5 +90,5 @@ All tests were run using the following compiler flags:
 - `C++20`:
   - all functions are now marked as `constexpr`
   - the relational operators are now implemented in terms of the three-way comparison operator `operator<=>(const dynarray&, const dynarray&)`
-    
+
 The actual features are enabled using the specific features test macros and not the `__cplusplus` macro.
