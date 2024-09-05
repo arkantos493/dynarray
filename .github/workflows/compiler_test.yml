@@ -20,6 +20,9 @@ jobs:
           sudo apt update
           sudo apt upgrade
           sudo apt install ${{ matrix.compiler }}
+          if [[ ${{ matrix.compiler }} == clang* ]]; then
+            sudo apt install lld-$(echo ${{ matrix.compiler }} | grep -o -E '[0-9]+')
+          fi
           ${{ matrix.compiler }} -v
       - name: "Install cmake 3.20"
         uses: lukka/get-cmake@v3.20.1
