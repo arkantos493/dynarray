@@ -2,7 +2,7 @@ name: Test with GCC, Clang and MSVC
 on:
   push:
     branches:
-      - main
+      - compiler_versions
   pull_request:
     branches:
       - main
