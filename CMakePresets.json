@@ -23,7 +23,7 @@
       "generator": "Unix Makefiles",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-zero-as-null-pointer-constant -Wno-c++1z-extensions -Wno-self-assign-overloaded -Wno-self-move -Werror"
+        "CMAKE_CXX_FLAGS": "-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-zero-as-null-pointer-constant -Wno-c++1z-extensions -Wno-self-assign-overloaded -Wno-self-move -Wno-reserved-identifier -Werror"
       }
     },
     {
