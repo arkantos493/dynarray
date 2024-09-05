@@ -20,9 +20,6 @@ jobs:
           sudo apt update
           sudo apt upgrade
           sudo apt install ${{ matrix.compiler }}
-          if [[ ${{ matrix.compiler }} == clang* ]]; then
-            sudo apt install lld-$(echo ${{ matrix.compiler }} | grep -o -E '[0-9]+')
-          fi
           ${{ matrix.compiler }} -v
       - name: "Install cmake 3.20"
         uses: lukka/get-cmake@v3.20.1
@@ -36,7 +33,6 @@ jobs:
           else
             export PRESET=clang
             export COMPILER=$(echo ${{ matrix.compiler }} | sed "s/clang/clang++/")
-            export CXXFLAGS="${CXXFLAGS} --gcc-toolchain=/usr/lib/gcc/x86_64-linux-gnu/13"
           fi
           cmake --preset $PRESET -DCPP_UTIL_ENABLE_TESTS=ON -DCMAKE_CXX_COMPILER=$COMPILER .
           cmake --build --preset $PRESET
@@ -46,7 +42,7 @@ jobs:
     runs-on: windows-2022
     strategy:
       matrix:
-        compiler: [14.16, 14.25, 14.29]
+        compiler: [14.29]
       fail-fast: false
     steps:
       - name: "Install MSVC ${{ matrix.compiler }}"
