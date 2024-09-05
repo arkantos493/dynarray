@@ -28,11 +28,11 @@ The tests are implemented using [Catch2](https://github.com/catchorg/Catch2/tree
 Building with GCC, Clang, or MSVC can be done using CMake presets.
 
 ```bash
-> git clone git@github.com:arkantos493/dynarray.git
-> cd dynarray
-> cmake --preset [preset] .
-> cmake --build --preset [preset]
-> ./build/dynarray
+git clone git@github.com:arkantos493/dynarray.git
+cd dynarray
+cmake --preset [preset] .
+cmake --build --preset [preset]
+./build/dynarray
 ```
 
 Where `[preset]` is one of `gcc`, `clang`, or `msvc`.
@@ -42,9 +42,9 @@ Where `[preset]` is one of `gcc`, `clang`, or `msvc`.
 To additionally build the tests and run them use:
 
 ```bash
-> cmake --preset [preset] -DCPP_UTIL_ENABLE_TESTS .
-> cmake --build --preset [preset]
-> ctest --preset [preset]
+cmake --preset [preset] -DCPP_UTIL_ENABLE_TESTS .
+cmake --build --preset [preset]
+ctest --preset [preset]
 ```
 
 Tests for all supported `C++` standards starting with `C++11` for the currently used compiler are generated. <br>
@@ -57,7 +57,7 @@ The `cpp_util::dynarray` has been tested with the following compilers, all insta
 manager and GitHub actions (other compilers or compiler versions may also be supported):
 
 | Compiler | Versions                                                                |
-| -------- | ----------------------------------------------------------------------- |
+|----------|-------------------------------------------------------------------------|
 | GCC      | 5.5.0, 6.4.0, 7.5.0, 8.4.0, 9.3.0, 10.2.0, 11.1.0                       |
 | Clang    | 3.9.1, 4.0.1, 5.0.1, 6.0.1, 7.0.1, 8.0.1, 9.0.1, 10.0.0, 11.0.0, 12.0.1 |
 | MSVC     | 19.16.27045.0, 19.25.28614.0, 19.29.30037.0                             |
