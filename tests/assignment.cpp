@@ -46,6 +46,12 @@ TEST_CASE("dynarray assignment operators", "[assignment]") {
     CHECK(std::all_of(arr1.begin(), arr1.end(), [](const int i) { return i == 42; }));
   }
 
+  SECTION("self move-assignment") {
+    arr2 = std::move(arr2);
+    REQUIRE(arr2.size() == 3);
+    CHECK(std::all_of(arr2.begin(), arr2.end(), [](const int i) { return i == 42; }));
+  }
+
   SECTION("initializer_list-assignment operator") {
     arr1 = {42, 42, 42};
     REQUIRE(arr1.size() == 3);
