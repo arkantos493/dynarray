@@ -19,7 +19,7 @@ are implemented:
 ## Prerequisites
 
 Any compiler supporting `C++11` should be sufficient (for more information see [Compiler Support](#compiler-support)). 
-Additionally, at least [CMake](https://cmake.org/) `3.20` is required.
+Additionally, at least [CMake](https://cmake.org/) `3.30` is required.
 
 The tests are implemented using [Catch2](https://github.com/catchorg/Catch2/tree/v2.x), which gets shipped as single header file with this repository.
 
