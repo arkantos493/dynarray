@@ -9,7 +9,7 @@
 
 #include "catch/catch.hpp"
 
-#include <algorithm>  // std::swao, std::all_of
+#include <algorithm>  // std::swap, std::all_of
 
 TEST_CASE("dynarray non-member functions", "[non-member]") {
     SECTION("swap() free function") {
@@ -19,12 +19,19 @@ TEST_CASE("dynarray non-member functions", "[non-member]") {
         REQUIRE(arr1.size() == 10);
         REQUIRE(arr2.size() == 5);
 
-        std::swap(arr1, arr2);
+        cpp_util::swap(arr1, arr2);
 
         REQUIRE(arr1.size() == 5);
         CHECK(std::all_of(arr1.begin(), arr1.end(), [](const int i) { return i == 2; }));
         REQUIRE(arr2.size() == 10);
         CHECK(std::all_of(arr2.begin(), arr2.end(), [](const int i) { return i == 1; }));
+
+        std::swap(arr1, arr2);
+
+        REQUIRE(arr1.size() == 10);
+        CHECK(std::all_of(arr1.begin(), arr1.end(), [](const int i) { return i == 1; }));
+        REQUIRE(arr2.size() == 5);
+        CHECK(std::all_of(arr2.begin(), arr2.end(), [](const int i) { return i == 2; }));
     }
 
     const cpp_util::dynarray<int> arr1 = { 1, 2, 3 };

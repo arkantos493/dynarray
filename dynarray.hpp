@@ -276,7 +276,6 @@ class dynarray {
   /**************************************************************************************************************************************/
   /**                                                       non-member functions                                                       **/
   /**************************************************************************************************************************************/
-  DYNARRAY_CONSTEXPR friend void swap(dynarray& lhs, dynarray& rhs) noexcept { lhs.swap(rhs); }
 #if defined(__cpp_impl_three_way_comparison) && defined(__cpp_lib_three_way_comparison)
   DYNARRAY_NODISCARD DYNARRAY_CONSTEXPR friend bool operator==(const dynarray& lhs, const dynarray& rhs) noexcept {
     return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
@@ -310,6 +309,9 @@ class dynarray {
   size_type size_{0};
   pointer data_{nullptr};
 };
+
+template <typename T>
+DYNARRAY_CONSTEXPR void swap(dynarray<T>& lhs, dynarray<T>& rhs) noexcept { lhs.swap(rhs); }
 
 /****************************************************************************************************************************************/
 /**                                                          deduction guides                                                          **/
