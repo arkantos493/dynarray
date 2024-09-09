@@ -1,6 +1,6 @@
 # cpp_util::dynarray
 
-[![Test with GCC, Clang and MSVC](https://github.com/arkantos493/dynarray/actions/workflows/compiler_test.yml/badge.svg)](https://github.com/breyerml/dynarray/actions/workflows/compiler_test.yml) &ensp;
+[![Test with GCC, Clang and MSVC](https://github.com/breyerml/dynarray/actions/workflows/compiler_test.yml/badge.svg)](https://github.com/breyerml/dynarray/actions/workflows/compiler_test.yml) &ensp;
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4f9e7aed05774d538c7fa6f99f81c26f)](https://app.codacy.com/gh/breyerml/dynarray/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) &ensp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -28,7 +28,7 @@ The tests are implemented using [Catch2](https://github.com/catchorg/Catch2/tree
 Building with GCC, Clang, or MSVC can be done using CMake presets.
 
 ```bash
-git clone git@github.com:arkantos493/dynarray.git
+git clone git@github.com:breyerml/dynarray.git
 cd dynarray
 cmake --preset [preset] .
 cmake --build --preset [preset]
