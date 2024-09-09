@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 project(dynarray
-        VERSION 1.0.1
+        VERSION 1.1.0
         DESCRIPTION "Implementation of a runtime fixed-size array."
         LANGUAGES CXX)
 
