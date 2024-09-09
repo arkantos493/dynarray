@@ -1,7 +1,8 @@
 #include "dynarray.hpp"
 
 #include <exception>  // std::exception
-#include <iostream>   // std::cout, std::boolalpha
+#include <iostream>   // std::cout
+#include <ios>        // std::boolalpha
 #include <iterator>
 #include <random>     // std::random_device, std::mt19937, std::uniform_int_distribution
 #include <utility>    // std::move
@@ -121,7 +122,7 @@ int main() {
 
 #if defined(__cpp_constexpr_dynamic_alloc) && defined(__cpp_lib_constexpr_numeric)
   // constexpr test
-  std::cout << force_compile_time_evaluation<gaus_sum(10)>() << std::endl;
+  std::cout << force_compile_time_evaluation<gaus_sum(10)>() << '\n';
 #endif
 
   return 0;
