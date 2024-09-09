@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021-06-26 - Marcel Breyer - All Rights Reserved
+ * Copyright (C) 2021 - Marcel Breyer - All Rights Reserved
  * Licensed under the MIT License. See LICENSE.md file in the project root for full license information.
  *
  * Implements a runtime fixed-size array.
@@ -20,7 +20,7 @@
 #include <type_traits>       // std::remove_cv, std::enable_if, std::is_convertible
 #include <utility>           // std::exchange
 
-#if defined(__cpp_impl_three_way_comparison) && defined(__cpp_lib_three_way_comparison)
+#if __has_include(<compare>)
 #include <compare>  // std::strong_ordering
 #endif
 
