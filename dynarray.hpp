@@ -306,8 +306,8 @@ class dynarray {
 #endif
 
  private:
-  size_type size_{0};
-  pointer data_{nullptr};
+  size_type size_{ 0 };
+  pointer data_{ nullptr };
 };
 
 template <typename T>
